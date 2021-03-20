@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Admin</title>
+    <link rel="stylesheet" href="./css/main.css">
+  </head>
+
+  <body>
+    <section class="labs" id="labs">
+      <div id="container">
+        <form id="newQuestionForm">
+          <h2>Admin Page - Make Quiz</h2>
+          <h3>New Question</h3>
+          <div id="newQuestionChoices">
+            <textarea id="newQuestionPrompt" required></textarea>
+            <br>
+            <input type="radio" class="newQuestionChoiceRadio" name="newQuestionRadio" required>
+            <input type="text" class="newQuestionChoiceInput" required>
+            <br>
+            <input type="radio" class="newQuestionChoiceRadio" name="newQuestionRadio" required>
+            <input type="text" class="newQuestionChoiceInput" required>
+            <br>
+          </div>
+          <div id="choiceLimit"></div>
+          <button type="button" id="addChoiceBtn">Add Choice</button>
+          <button type="submit" id="submitBtn">Save</button>
+        </form>
+        <div id="questions">
+          <h3>Existing Questions</h3>
+          <br>
+        </div>
+    </section>
+    <a class="button" href='./index.html'>Back</a>
+
+    <script src="./js/admin.js"></script>
+    <script src="./js/shared.js"></script>
+  </body>
+
+</html>
