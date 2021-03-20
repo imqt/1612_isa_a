@@ -7,9 +7,9 @@ const mysql = require('mysql');
 
 const db_config = {
   host: "us-cdbr-east-03.cleardb.com",
-  user: "bac243d2a10c95",
-  password: "f99e04c4",
-  database: "heroku_8b1c4ba640d4b92",
+  user: "beb36f7c95492f",
+  password: "acbf7750",
+  database: "heroku_9c7655f8e822914",
   multipleStatements: true,
 }
 
@@ -163,3 +163,4 @@ let server = http.createServer((req, res) => {
 });
 
 server.listen(process.env.PORT || 3000);
+// server.listen(3000);

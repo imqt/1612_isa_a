@@ -1,4 +1,4 @@
-const root = "http://localhost:3000"
+const root = "https://pure-anchorage-93427.herokuapp.com/"
 let questionList = [];
 
 function parseDBQuestions(res) {
