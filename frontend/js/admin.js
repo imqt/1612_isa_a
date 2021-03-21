@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderQuestions(questionList) {
   if (questionList[0].questionID) {
+    document.getElementById("questions").innerHTML = "<h3>Existing Questions</h3>";
     for (let i = 0; i < questionList.length; i++) {
 
       let form = document.createElement('form');
@@ -119,14 +120,17 @@ function addNewQuestion() {
 
 function addNewQuestionHandler(form) {
   form.addEventListener("submit", (e) => {
+    e.preventDefault();
     addNewQuestion();
   });
 }
 
 function addSubmitHandler(form, questionID) {
+  console.log("adding submit handler")
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     updateQuestion(questionID);
+    console.log("updated")
   });
 }
 
@@ -165,7 +169,7 @@ function addChoiceHandler(button) {
 }
 
 function updateQuestion(questionID) {
-
+  console.log("updating")
   let choices = [];
   let answer;
   let prompt = document.getElementById("questionPrompt" + questionID).value;
