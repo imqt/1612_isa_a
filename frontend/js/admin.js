@@ -1,9 +1,9 @@
-const choiceLimitMsg = "4 is the maximum number of choices!";
+const choiceLimitMsg = "4 is the maximum number of choices for a question";
 let questionID = 1;
 let newQuestionChoices = 2;
 
 document.addEventListener("DOMContentLoaded", () => {
-  getDBQuestions();
+  getQuestions();
   
   let form = document.getElementById("newQuestionForm");
   addNewQuestionHandler(form);
@@ -11,6 +11,137 @@ document.addEventListener("DOMContentLoaded", () => {
   let addChoiceBtn = document.getElementById("addChoiceBtn");
   addChoiceHandler(addChoiceBtn);
 });
+
+function addNewQuestion() {
+  let choices = [];
+  let answer;
+  let prompt = document.getElementById("newQuestionPrompt").value;
+  let choiceRadios = document.getElementsByClassName("newQuestionChoiceRadio");
+  let choiceInputs = document.getElementsByClassName("newQuestionChoiceInput");
+
+  for (let i = 0; i < choiceInputs.length; i++) {
+    let choice = {};
+    choice.choiceText = choiceInputs[i].value;
+    choices.push(choice);
+    if (choiceRadios[i].checked) {
+      answer = choiceInputs[i].value;
+    }
+  }
+
+  let question = {
+    questionID: questionID,
+    questionText: prompt,
+    choices: choices,
+    numChoices: choices.length,
+    answer: answer,
+  };
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", root + "questions", true);
+  xhttp.responseType = "json";
+  xhttp.send(JSON.stringify(question));
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log("POST");
+    }
+  };
+  getDBQuestions();
+}
+
+function addNewQuestionHandler(form) {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    addNewQuestion();
+  });
+}
+
+function addChoice() {
+
+  let div = document.getElementById("newQuestionChoices");
+
+  let radio = document.createElement("input");
+  radio.setAttribute("type", "radio");
+  radio.setAttribute("class", "newQuestionChoiceRadio");
+  radio.setAttribute("name", "newQuestionRadio");
+  radio.setAttribute("required", "required");
+
+  let input = document.createElement("input");
+  input.setAttribute("type", "text");
+  input.setAttribute("class", "newQuestionChoiceInput");
+  input.setAttribute("required", "required");
+
+  let br = document.createElement("br");
+
+  div.appendChild(radio);
+  div.appendChild(input);
+  div.appendChild(br);
+
+  newQuestionChoices++;
+}
+
+function addChoiceHandler(button) {
+  button.addEventListener("click", (e) => {
+    if (newQuestionChoices >= 4) {
+      document.getElementById("choiceLimit").innerHTML = choiceLimitMsg;
+    } else {
+      addChoice();
+    }
+  });
+}
+
+function addSubmitHandler(form, questionID) {
+  console.log("adding submit handler")
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    updateQuestion(questionID);
+    console.log("updated")
+  });
+}
+
+function updateQuestion(questionID) {
+  console.log("updating")
+  let choices = [];
+  let answer;
+  let prompt = document.getElementById("questionPrompt" + questionID).value;
+  
+  let choiceRadios = document.getElementsByClassName(
+    "question" + questionID + "radios"
+  );
+  let choiceInputs = document.getElementsByClassName(
+    "question" + questionID + "inputs"
+  );
+  let choiceIDs = document.getElementsByClassName(
+    "question" + questionID + "choiceIDs"
+  );
+
+  for (let i = 0; i < choiceInputs.length; i++) {
+    let choice = {};
+    choice.choiceID = choiceIDs[i].value;
+    choice.choiceText = choiceInputs[i].value;
+    choices.push(choice);
+    if (choiceRadios[i].checked) {
+        answer = choiceInputs[i].value;
+    }
+  }
+
+  let question = {
+    "questionID": questionID,
+    "questionText": prompt,
+    "choices": choices,
+    "numChoices": choices.length,
+    "answer": answer,
+  };
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("PUT", root + "questions", true);
+  xhttp.responseType = "json";
+  xhttp.send(JSON.stringify(question));
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      console.log("PUT");
+    }
+  };
+}
 
 function renderQuestions(questionList) {
   if (questionList[0].questionID) {
@@ -80,135 +211,4 @@ function renderQuestions(questionList) {
       addSubmitHandler(form, questionList[i].questionID);
     }
   }
-}
-
-function addNewQuestion() {
-  let choices = [];
-  let answer;
-  let prompt = document.getElementById("newQuestionPrompt").value;
-  let choiceRadios = document.getElementsByClassName("newQuestionChoiceRadio");
-  let choiceInputs = document.getElementsByClassName("newQuestionChoiceInput");
-
-  for (let i = 0; i < choiceInputs.length; i++) {
-    let choice = {};
-    choice.choiceText = choiceInputs[i].value;
-    choices.push(choice);
-    if (choiceRadios[i].checked) {
-      answer = choiceInputs[i].value;
-    }
-  }
-
-  let question = {
-    questionID: questionID,
-    questionText: prompt,
-    choices: choices,
-    numChoices: choices.length,
-    answer: answer,
-  };
-
-  const xhttp = new XMLHttpRequest();
-  xhttp.open("POST", root + "questions", true);
-  xhttp.responseType = "json";
-  xhttp.send(JSON.stringify(question));
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      console.log("POST");
-    }
-  };
-  getDBQuestions();
-}
-
-function addNewQuestionHandler(form) {
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    addNewQuestion();
-  });
-}
-
-function addSubmitHandler(form, questionID) {
-  console.log("adding submit handler")
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    updateQuestion(questionID);
-    console.log("updated")
-  });
-}
-
-function addChoice() {
-
-  let div = document.getElementById("newQuestionChoices");
-
-  let radio = document.createElement("input");
-  radio.setAttribute("type", "radio");
-  radio.setAttribute("class", "newQuestionChoiceRadio");
-  radio.setAttribute("name", "newQuestionRadio");
-  radio.setAttribute("required", "required");
-
-  let input = document.createElement("input");
-  input.setAttribute("type", "text");
-  input.setAttribute("class", "newQuestionChoiceInput");
-  input.setAttribute("required", "required");
-
-  let br = document.createElement("br");
-
-  div.appendChild(radio);
-  div.appendChild(input);
-  div.appendChild(br);
-
-  newQuestionChoices++;
-}
-
-function addChoiceHandler(button) {
-  button.addEventListener("click", (e) => {
-    if (newQuestionChoices >= 4) {
-      document.getElementById("choiceLimit").innerHTML = choiceLimitMsg;
-    } else {
-      addChoice();
-    }
-  });
-}
-
-function updateQuestion(questionID) {
-  console.log("updating")
-  let choices = [];
-  let answer;
-  let prompt = document.getElementById("questionPrompt" + questionID).value;
-  
-  let choiceRadios = document.getElementsByClassName(
-    "question" + questionID + "radios"
-  );
-  let choiceInputs = document.getElementsByClassName(
-    "question" + questionID + "inputs"
-  );
-  let choiceIDs = document.getElementsByClassName(
-    "question" + questionID + "choiceIDs"
-  );
-
-  for (let i = 0; i < choiceInputs.length; i++) {
-    let choice = {};
-    choice.choiceID = choiceIDs[i].value;
-    choice.choiceText = choiceInputs[i].value;
-    choices.push(choice);
-    if (choiceRadios[i].checked) {
-        answer = choiceInputs[i].value;
-    }
-  }
-
-  let question = {
-    "questionID": questionID,
-    "questionText": prompt,
-    "choices": choices,
-    "numChoices": choices.length,
-    "answer": answer,
-  };
-
-  const xhttp = new XMLHttpRequest();
-  xhttp.open("PUT", root + "questions", true);
-  xhttp.responseType = "json";
-  xhttp.send(JSON.stringify(question));
-  xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-      console.log("PUT");
-    }
-  };
 }

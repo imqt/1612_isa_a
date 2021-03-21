@@ -1,7 +1,7 @@
 const noQuestionsMsg = "No questions in this quiz.";
 
 document.addEventListener("DOMContentLoaded", () => {
-  getDBQuestions();
+  getQuestions();
   let questionsForm = document.getElementById("questionsForm");
   addSubmitHandler(questionsForm);
 });
@@ -11,6 +11,36 @@ function addSubmitHandler(form) {
     e.preventDefault();
     processQuiz();
   });
+}
+
+function processQuiz() {
+  
+  let score = 0;
+  let studentChoice = "";
+
+  for (let i = 0; i < questionList.length; i++) {
+    for (let j = 0; j < questionList[i].choices.length; j++) {
+      if (
+        document.getElementById("question" + (i + 1) + "radio" + (j + 1))
+          .checked
+      ) {
+        studentChoice = document.getElementById(
+          "question" + (i + 1) + "input" + (j + 1)
+        );
+        if (questionList[i].answer === studentChoice.innerHTML) {
+          score++;
+          studentChoice.classList.add("correct");
+        } else {
+          studentChoice.classList.add("incorrect");
+        }
+      }
+    }
+  }
+
+  let finalScore = document.getElementById("finalScore");
+  finalScore.innerHTML = `Your score: ${score} / ${questionList.length}`;
+  finalScore.hidden = false;
+  document.getElementById("submitBtn").disabled = true;
 }
 
 function renderQuestions(questionList) {
@@ -88,32 +118,3 @@ function renderQuestions(questionList) {
   }
 }
 
-function processQuiz() {
-  
-  let score = 0;
-  let studentChoice = "";
-
-  for (let i = 0; i < questionList.length; i++) {
-    for (let j = 0; j < questionList[i].choices.length; j++) {
-      if (
-        document.getElementById("question" + (i + 1) + "radio" + (j + 1))
-          .checked
-      ) {
-        studentChoice = document.getElementById(
-          "question" + (i + 1) + "input" + (j + 1)
-        );
-        if (questionList[i].answer === studentChoice.innerHTML) {
-          score++;
-          studentChoice.classList.add("correct");
-        } else {
-          studentChoice.classList.add("incorrect");
-        }
-      }
-    }
-  }
-
-  let finalScore = document.getElementById("finalScore");
-  finalScore.innerHTML = `Your score: ${score} / ${questionList.length}`;
-  finalScore.hidden = false;
-  document.getElementById("submitBtn").disabled = true;
-}

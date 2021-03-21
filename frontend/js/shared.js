@@ -1,7 +1,24 @@
 const root = "https://pure-anchorage-93427.herokuapp.com/"
+
 let questionList = [];
 
-function parseDBQuestions(response) {
+function getQuestions() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("GET", root + "questions", true);
+  xhttp.responseType = "json";
+  xhttp.send();
+  xhttp.onload = function() {
+    let response = xhttp.response;
+    questionsObj = response
+    questionList = parseQuestions(response);
+    if (questionList[0].questionID) {
+      questionID = questionList.length + 1;
+    }
+    renderQuestions(questionList);
+  };
+}
+
+function parseQuestions(response) {
   let current = -1;
   let question = {};
   let choice = {};
@@ -23,11 +40,14 @@ function parseDBQuestions(response) {
       choice.choiceID = response[i].choiceID;
       choice.choiceText = response[i].choiceText;
       question.choices = [choice];
+
     } else {
+
       choice = {};
       choice.choiceID = response[i].choiceID;
       choice.choiceText = response[i].choiceText;
       question.choices.push(choice);
+
     }
     current = response[i].questionID;
   }
@@ -35,18 +55,3 @@ function parseDBQuestions(response) {
   return result;
 }
 
-function getDBQuestions() {
-  const xhttp = new XMLHttpRequest();
-  xhttp.open("GET", root + "questions", true);
-  xhttp.responseType = "json";
-  xhttp.send();
-  xhttp.onload = function() {
-    let response = xhttp.response;
-    questionsObj = response
-    questionList = parseDBQuestions(response);
-    if (questionList[0].questionID) {
-      questionID = questionList.length + 1;
-    }
-    renderQuestions(questionList);
-  };
-}
