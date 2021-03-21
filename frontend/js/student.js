@@ -1,8 +1,7 @@
-const noQuestionsMsg = "No questions available.";
+const noQuestionsMsg = "No questions in this quiz.";
 
 document.addEventListener("DOMContentLoaded", () => {
   getDBQuestions();
-  console.log("parsing")
   let questionsForm = document.getElementById("questionsForm");
   addSubmitHandler(questionsForm);
 });
@@ -49,6 +48,7 @@ function renderQuestions(questionList) {
         radio.setAttribute("name", "radio" + questionList[i].questionID);
         radio.setAttribute("required", "required");
         liElement.appendChild(radio);
+
         let input = document.createElement("span");
         input.setAttribute(
           "id",
@@ -60,6 +60,7 @@ function renderQuestions(questionList) {
         );
         input.innerHTML = questionList[i].choices[j].choiceText;
         liElement.appendChild(input);
+
         let choiceID = document.createElement("input");
         choiceID.setAttribute("id", questionList[i].choices[j].choiceID);
         choiceID.setAttribute(
@@ -74,20 +75,24 @@ function renderQuestions(questionList) {
       }
       form.appendChild(div);
     }
+
     let submitBtn = document.createElement("button");
     submitBtn.setAttribute("type", "submit");
     submitBtn.setAttribute("id", "submitBtn");
     submitBtn.innerHTML = "Submit";
     form.appendChild(submitBtn);
     document.getElementById("quizContainer").appendChild(form);
+
   } else {
     document.getElementById("noQuestions").innerHTML = noQuestionsMsg;
   }
 }
 
 function processQuiz() {
+  
   let score = 0;
   let studentChoice = "";
+
   for (let i = 0; i < questionList.length; i++) {
     for (let j = 0; j < questionList[i].choices.length; j++) {
       if (

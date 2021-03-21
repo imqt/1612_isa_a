@@ -1,11 +1,13 @@
+const choiceLimitMsg = "4 is the maximum number of choices!";
 let questionID = 1;
 let newQuestionChoices = 2;
-const choiceLimitMsg = "4 is the maximum number of choices.";
 
 document.addEventListener("DOMContentLoaded", () => {
   getDBQuestions();
+  
   let form = document.getElementById("newQuestionForm");
   addNewQuestionHandler(form);
+
   let addChoiceBtn = document.getElementById("addChoiceBtn");
   addChoiceHandler(addChoiceBtn);
 });
@@ -13,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function renderQuestions(questionList) {
   if (questionList[0].questionID) {
     for (let i = 0; i < questionList.length; i++) {
+
       let form = document.createElement('form');
       form.setAttribute("id", "form" + questionList[i].questionID);
   
@@ -31,6 +34,7 @@ function renderQuestions(questionList) {
       div.appendChild(prompt);
   
       for (let j = 0; j < questionList[i].choices.length; j++) {
+
         let ul = document.createElement('ul');
         ul.setAttribute("class", "choiceList");
   
@@ -63,6 +67,7 @@ function renderQuestions(questionList) {
         ul.appendChild(liElement);
         div.appendChild(ul);
       }
+
       let saveChangesBtn = document.createElement('button');
       saveChangesBtn.setAttribute("id", "saveChangesBtn");
       saveChangesBtn.setAttribute("type", "submit");
@@ -126,6 +131,7 @@ function addSubmitHandler(form, questionID) {
 }
 
 function addChoice() {
+
   let div = document.getElementById("newQuestionChoices");
 
   let radio = document.createElement("input");
@@ -159,10 +165,11 @@ function addChoiceHandler(button) {
 }
 
 function updateQuestion(questionID) {
-  console.log(questionID);
+
   let choices = [];
   let answer;
   let prompt = document.getElementById("questionPrompt" + questionID).value;
+  
   let choiceRadios = document.getElementsByClassName(
     "question" + questionID + "radios"
   );
